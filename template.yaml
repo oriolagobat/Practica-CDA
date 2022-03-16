@@ -45,10 +45,10 @@ Resources:
     Properties:
       TableName: !Sub '${AWS::StackName}-dynamodb-table'
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: id  # Partition key
           AttributeType: S
       KeySchema:
-        - AttributeName: AttributeDefinitions
+        - AttributeName: id
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 5
