@@ -1,6 +1,7 @@
 import {DynamoDB} from "aws-sdk";
+import {DocumentClient} from "aws-sdk/lib/dynamodb/document_client";
 
-const handler = async (event: any, _context: any) => {
+const handler = async (event: any, _context: any) : Promise<DocumentClient.GetItemOutput> =>  {
     const client = new DynamoDB.DocumentClient()
     let res = await client.get({
         Key: {
@@ -9,7 +10,7 @@ const handler = async (event: any, _context: any) => {
         TableName: "oriol-agost-dynamodb-table"
     }).promise()
 
-    console.log(res)
+    return(res)
 }
 
 export {handler}
