@@ -54,7 +54,7 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-
+  ################################################### PRACTICE 2 ###################################################
   ### ROLE write definition
   LambdaWriteDynamodbRole:
     Type: AWS::IAM::Role
@@ -178,3 +178,21 @@ Resources:
 #                - dynamodb:DeleteItem
 #              Resource:
 #                - !GetAtt Dynamodb.Arn
+
+  ################################################### PRACTICE 3 ###################################################
+  EventBridge:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: !Sub '${AWS::StackName}-event-bridge'
+
+#  EventBusRule:
+#    Type: AWS::Events::Rule
+#    Properties:
+#      EventBusName: !Sub '${AWS::StackName}-event-bridge'
+#      EventPattern: Json
+#      Name: String
+#      RoleArn: String
+#      ScheduleExpression: String
+#      State: String
+#      Targets:
+#        - Target

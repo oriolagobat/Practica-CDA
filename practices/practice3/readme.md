@@ -2,10 +2,10 @@
 
 Communication between lambdas using EventBridge
 
-The goal of this practice is communicate two lambdas using an event bridge. 
+The goal of this practice is to communicate two lambdas using an event bridge. 
 
-You should implement ping pong game. 
-Each player is a lambda, and when the player shot the ball, 
+You should implement a ping pong game. 
+Each player is a lambda, and when the player shoots the ball, 
 it sends an event to the event bridge
 
 You should create the following resources:
@@ -14,7 +14,7 @@ You should create the following resources:
 - event bridge rules to route the events from one lambda to each other
 - lambda permission to allow event bridge execute lambda code
 
-***Usefull links***
+***Useful links***
 
 - AWS::Events::EventBus: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-eventbus.html
 - AWS::Events::Rule: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html
@@ -24,17 +24,17 @@ You should create the following resources:
 
 
 Some considerations:
-- When do the game finish?
-    - The game finish when user fails his shot. Before send an event, a random number between 0 and 10 
-  should be generated and if number is bigger than 7, the fails his shot    
-    - In case more than 10 shots are done, the game finish. 
+- When does the game finish?
+    - The game finish when an user fails his shot. Before sending an event, a random number between 0 and 10 
+  should be generated and if the number is bigger than 7, the user fails his shot    
+    - In case that more than 10 shots are done, the game finishes. 
 
 
 
 
 ### Step 1: Hello Event
 
-Create an event bus with all the necessary resources to communicate it with hello world lambda. 
+Create an event bus with all the necessary resources to communicate it with the hello world lambda. 
 
 Try to send an event to the event bus and check the logs from hello-world lambda.
 
@@ -47,9 +47,9 @@ aws events put-events --entries file://start-event.json
 
 ### Step 2: Player one
 
-Create a lambda that reacts the player2 events.  
+Create a lambda that reacts to the player2 events.  
 
-This lambda will handle initial event and send the new event to hello world lambda.
+This lambda will handle the initial event and send the new event to the hello world lambda.
 
 Check all your code is working properly, ***check finish conditions*** sending fake events.
 
@@ -65,9 +65,9 @@ Check all your code is working properly, ***check finish conditions*** sending f
 
 ### Step 3: Player two
 
-Create a lambda that reacts to player1 events. 
+Create a lambda that reacts to the player1 events. 
 
-This lambda will do the same as player one lambda. You can reuse the existing code.
+This lambda will do the same as player one's lambda. You can reuse the existing code.
 
 ```
 # Event send from player2
