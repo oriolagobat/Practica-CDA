@@ -201,3 +201,13 @@ Resources:
         -
           Arn: !GetAtt HelloWorldLambda.Arn
           Id: "HelloWorldLambda"
+
+  # Give event permission to invoke lambda
+  EventBridgeLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: "HelloWorldLambda"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt EventBridgeRule.Arn
