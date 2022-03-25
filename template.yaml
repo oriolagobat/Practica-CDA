@@ -179,20 +179,25 @@ Resources:
 #              Resource:
 #                - !GetAtt Dynamodb.Arn
 
-  ################################################### PRACTICE 3 ###################################################
+  ################################################### PRACTICE 3 #####
+  ##############################################
+  # Event bridge definition
   EventBridge:
     Type: AWS::Events::EventBus
     Properties:
       Name: !Sub '${AWS::StackName}-event-bridge'
 
-#  EventBusRule:
-#    Type: AWS::Events::Rule
-#    Properties:
-#      EventBusName: !Sub '${AWS::StackName}-event-bridge'
-#      EventPattern: Json
-#      Name: String
-#      RoleArn: String
-#      ScheduleExpression: String
-#      State: String
-#      Targets:
-#        - Target
+  # Event bridge rules definition
+  EventBridgeRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventBusName: !GetAtt EventBridge.Arn
+      EventPattern:
+        source:
+          - "player2"
+      Name: !Sub '${AWS::StackName}-events-from-player-one-rule'
+      State: ENABLED
+      Targets:
+        -
+          Arn: !GetAtt HelloWorldLambda.Arn
+          Id: "HelloWorldLambda"

@@ -10,7 +10,7 @@ const handler = async (event, _context) => {
         },
         TableName: "oriol-agost-dynamodb-table"
     }).promise();
-    return (res);
+    return (res.Item);
 };
 exports.handler = handler;
 //# sourceMappingURL=get.js.map
