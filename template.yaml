@@ -199,15 +199,23 @@ Resources:
       State: ENABLED
       Targets:
         -
-          Arn: !GetAtt HelloWorldLambda.Arn
-          Id: "HelloWorldLambda"
+          Arn: !GetAtt PlayerOneLambda.Arn
+          Id: "PlayerOneLambda"
 
   # Give event permission to invoke lambda
   EventBridgeLambdaPermission:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
-        Ref: "HelloWorldLambda"
+        Ref: "PlayerOneLambda"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn: !GetAtt EventBridgeRule.Arn
+
+  PlayerOneLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-player-one-lambda'
+      Handler: playerOne.handler
+      CodeUri: dist/practice3
+      Role: !GetAtt LambdaExecutionRole.Arn
