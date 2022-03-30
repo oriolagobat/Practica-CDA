@@ -179,16 +179,16 @@ Resources:
 #              Resource:
 #                - !GetAtt Dynamodb.Arn
 
-  ################################################### PRACTICE 3 #####
-  ##############################################
+  ############################## PRACTICE 3 ##########################
+  ####################################################################
   # Event bridge definition
   EventBridge:
     Type: AWS::Events::EventBus
     Properties:
       Name: !Sub '${AWS::StackName}-event-bridge'
 
-  # Event bridge rules definition
-  EventBridgeRule:
+  # Event bridge rules definition for player one
+  EventBridgePlayerOneRule:
     Type: AWS::Events::Rule
     Properties:
       EventBusName: !GetAtt EventBridge.Arn
@@ -210,7 +210,7 @@ Resources:
         Ref: "PlayerOneLambda"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
-      SourceArn: !GetAtt EventBridgeRule.Arn
+      SourceArn: "EventBridgePlayerOneRule"
 
   PlayerOneLambda:
     Type: AWS::Serverless::Function

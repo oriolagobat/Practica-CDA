@@ -1,6 +1,7 @@
 import {EventBridge} from "aws-sdk";
+import {EventBridgeEvent} from "aws-lambda";
 
-const handler = async (event: any, _context: any) => {
+const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
     if (!checkSource(event)) {
         console.log("Error, source was not the expected one")
     }
@@ -14,18 +15,17 @@ function checkSource(event: any): Boolean {
 }
 
 function checkAndReturnNewRound(event: any): number {
-    let start = String("start")
     let actualRound = event.detail.round;
-    if (actualRound === start) {
+    if (isNaN(actualRound)) {
         console.log("Starting game")
-        return 0  // "Start" the game
+        return 1  // "Start" the game, last round will be 10
     }
     console.log("Actual round is" + actualRound)
     return manageStartedGame(actualRound);
 }
 
 function manageStartedGame(actualRound: number): number {
-    let lastRound = 9;
+    let lastRound = 10;
     if (actualRound == lastRound) {
         throw new Error("Game has already finished");
     }
