@@ -1,3 +1,5 @@
+import {EventBridge} from "aws-sdk";
+
 // Returns true if the event source is equal to the expected one, both given as parameters.
 export function checkSource(event: any, expected: String) {
     if (expected !== event.source) {
@@ -5,6 +7,7 @@ export function checkSource(event: any, expected: String) {
         throw Error("Error, source was not the expected one")
     }
 }
+
 
 // Checks if current round we're starting the game and return 1
 // Otherwise, call function to return the new round
@@ -29,7 +32,7 @@ function manageStartedGame(actualRound: number): number {
 }
 
 
-// If the number generated is bigger than seven, continue playing
+// Generate a number. If it's bigger than seven, continue playing
 // Otherwise, stop the game
 export function checkShot(player: String): Boolean {
     console.log("Checking shot")
@@ -45,4 +48,25 @@ export function checkShot(player: String): Boolean {
 function getRandomInt(): number {
     const max = 10;
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+
+export function createNewEvent(event: any, source: string) {
+    const eventBridge = new EventBridge();
+
+    const newRound = checkAndReturnNewRound(event);
+    const detail = {round: newRound};
+
+    const params = {
+        Entries: [
+            {
+                Detail: JSON.stringify(detail),
+                DetailType: "ping-pong-event",
+                EventBusName: 'oriol-agost-event-bridge',
+                Source: source,
+            },
+        ]
+    }
+
+    return eventBridge.putEvents(params).promise();
 }
