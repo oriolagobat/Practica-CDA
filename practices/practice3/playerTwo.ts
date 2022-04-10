@@ -1,4 +1,4 @@
-import AWS from "aws-sdk";
+import {EventBridge} from "aws-sdk";
 import {EventBridgeEvent} from "aws-lambda";
 
 const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
@@ -10,7 +10,7 @@ const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
 }
 
 function checkSource(event: any): Boolean {
-    let expected = String("player2");
+    let expected = String("player1");
     return expected === event.source;
 }
 
@@ -33,7 +33,7 @@ function manageStartedGame(actualRound: number): number {
 }
 
 function createNewEvent(newRound: number) {
-    const eventBridge = new AWS.EventBridge();
+    const eventBridge = new EventBridge();
     const detail = {round: newRound.toString()}
     const params = {
         Entries: [
@@ -41,7 +41,7 @@ function createNewEvent(newRound: number) {
                 Detail: JSON.stringify(detail),
                 DetailType: "ping-pong-event",
                 EventBusName: 'oriol-agost-event-bridge',
-                Source: 'player1',
+                Source: 'player2',
             },
         ]
     };

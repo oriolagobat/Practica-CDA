@@ -171,16 +171,47 @@ Resources:
       # Option bellow is a valid option as well,
       # and I won't have to declare the role for it.
       # The role line above should have to be deleted to make policies have effect.
-#      Policies:
-#        - Statement:
-#            - Effect: Allow
-#              Action:
-#                - dynamodb:DeleteItem
-#              Resource:
-#                - !GetAtt Dynamodb.Arn
+  #      Policies:
+  #        - Statement:
+  #            - Effect: Allow
+  #              Action:
+  #                - dynamodb:DeleteItem
+  #              Resource:
+  #                - !GetAtt Dynamodb.Arn
 
   ############################## PRACTICE 3 ##########################
   ####################################################################
+
+  ### Lambda's definition
+  ## Player One lambda definition
+  PlayerOneLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-player-one-lambda'
+      Handler: playerOne.handler
+      CodeUri: dist/practice3
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - events:PutEvents
+
+
+  PlayerTwoLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-player-two-lambda'
+      Handler: playerTwo.handler
+      CodeUri: dist/practice3
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - events:PutEvents
+
+  ## Event bridge
   # Event bridge definition
   EventBridge:
     Type: AWS::Events::EventBus
@@ -194,28 +225,45 @@ Resources:
       EventBusName: !GetAtt EventBridge.Arn
       EventPattern:
         source:
-          - "player2"
+          - player2
       Name: !Sub '${AWS::StackName}-events-from-player-one-rule'
       State: ENABLED
       Targets:
-        -
-          Arn: !GetAtt PlayerOneLambda.Arn
+        - Arn: !GetAtt PlayerOneLambda.Arn
           Id: "PlayerOneLambda"
 
-  # Give event permission to invoke lambda
-  EventBridgeLambdaPermission:
+
+  # Event bridge rules definition for player two
+  EventBridgePlayerTwoRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventBusName: !GetAtt EventBridge.Arn
+      EventPattern:
+        source:
+          - player1
+      Name: !Sub '${AWS::StackName}-events-from-player-two-rule'
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt PlayerTwoLambda.Arn
+          Id: "PlayerTwoLambda"
+
+  # Give event permission to invoke player one lambda
+  EventBridgePlayerOneLambdaPermission:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
         Ref: "PlayerOneLambda"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
-      SourceArn: "EventBridgePlayerOneRule"
+      SourceArn: !GetAtt EventBridgePlayerOneRule.Arn
 
-  PlayerOneLambda:
-    Type: AWS::Serverless::Function
+  # Give event permission to invoke player two lambda
+  EventBridgePlayerTwoLambdaPermission:
+    Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !Sub '${AWS::StackName}-player-one-lambda'
-      Handler: playerOne.handler
-      CodeUri: dist/practice3
-      Role: !GetAtt LambdaExecutionRole.Arn
+      FunctionName:
+        Ref: "PlayerTwoLambda"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt EventBridgePlayerTwoRule.Arn
+
