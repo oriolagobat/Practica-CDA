@@ -52,6 +52,7 @@ function getRandomInt(): number {
 }
 
 
+// Create a new event with the details and send it to the event bridge
 export function createNewEvent(source: string, round: number) {
     const eventBridge = new EventBridge();
 
