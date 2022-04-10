@@ -68,5 +68,6 @@ export function createNewEvent(source: string, round: number) {
         ]
     }
 
+    console.log("Creating new event")
     return eventBridge.putEvents(params).promise();
 }

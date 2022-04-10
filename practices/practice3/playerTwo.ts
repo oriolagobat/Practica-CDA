@@ -10,7 +10,7 @@ const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
     let newRound = checkAndReturnNewRound(event);
 
     // Check if it's a valid shot and create a new event
-    const playerNum = "Two"
+    const playerNum = "Two"  // Needed for the console.log
     if (checkShot(playerNum)) {
         const newSource = "player2";
         await createNewEvent(newSource, newRound);
