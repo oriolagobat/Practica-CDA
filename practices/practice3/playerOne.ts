@@ -1,22 +1,17 @@
 import AWS from "aws-sdk";
 import {EventBridgeEvent} from "aws-lambda";
 import "./utils";
-import {checkAndReturnNewRound, checkShot} from "./utils";
+import {checkAndReturnNewRound, checkShot, checkSource} from "./utils";
 
 const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
-    if (!checkSource(event)) {
-        console.log("Error, source was not the expected one")
-    }
+    const expectedSource = "player2";
+    checkSource(event, expectedSource)
+
     let newRound: number = checkAndReturnNewRound(event)
     if (checkShot("One")) {
         await createNewEvent(newRound)
     }
-}
-
-function checkSource(event: any): Boolean {
-    let expected = String("player2");
-    return expected === event.source;
-}
+};
 
 function createNewEvent(newRound: number) {
     const eventBridge = new AWS.EventBridge();

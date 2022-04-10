@@ -1,3 +1,11 @@
+// Returns true if the event source is equal to the expected one, both given as parameters.
+export function checkSource(event: any, expected: String) {
+    if (expected !== event.source) {
+        console.log("Expected source: " + expected + " but got: " + event.source);
+        throw Error("Error, source was not the expected one")
+    }
+}
+
 // Checks if current round we're starting the game and return 1
 // Otherwise, call function to return the new round
 export function checkAndReturnNewRound(event: any): number {
