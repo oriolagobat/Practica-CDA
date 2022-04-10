@@ -1,7 +1,8 @@
 import {EventBridge} from "aws-sdk";
+import {EventBridgeEvent} from "aws-lambda";
 
 // Returns true if the event source is equal to the expected one, both given as parameters.
-export function checkSource(event: any, expected: String) {
+export function checkSource(event: EventBridgeEvent<any, any>, expected: string) {
     if (expected !== event.source) {
         console.log("Expected source: " + expected + " but got: " + event.source);
         throw Error("Error, source was not the expected one")
@@ -11,7 +12,7 @@ export function checkSource(event: any, expected: String) {
 
 // Checks if current round we're starting the game and return 1
 // Otherwise, call function to return the new round
-export function checkAndReturnNewRound(event: any): number {
+export function checkAndReturnNewRound(event: EventBridgeEvent<any, any>): number {
     let actualRound = event.detail.round;
     if (isNaN(actualRound)) {
         console.log("Starting game")
@@ -34,7 +35,7 @@ function manageStartedGame(actualRound: number): number {
 
 // Generate a number. If it's bigger than seven, continue playing
 // Otherwise, stop the game
-export function checkShot(player: String): Boolean {
+export function checkShot(player: string): boolean {
     console.log("Checking shot")
     let shot = getRandomInt()
     if (shot > 7) {
@@ -51,11 +52,10 @@ function getRandomInt(): number {
 }
 
 
-export function createNewEvent(event: any, source: string) {
+export function createNewEvent(source: string, round: number) {
     const eventBridge = new EventBridge();
 
-    const newRound = checkAndReturnNewRound(event);
-    const detail = {round: newRound};
+    const detail = {round: round};
 
     const params = {
         Entries: [
