@@ -7,7 +7,7 @@ const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
     }
     let newRound: number = checkAndReturnNewRound(event)
     if (checkShot()) {
-        console.log("New round: " + newRound)
+        await createNewEvent(newRound)
     }
 }
 
@@ -22,7 +22,7 @@ function checkAndReturnNewRound(event: any): number {
         console.log("Starting game")
         return 1 // "Start" the game, last round will be 10
     }
-    console.log("Actual round is" + actualRound)
+    console.log("Actual round is " + actualRound)
     return manageStartedGame(actualRound);
 }
 

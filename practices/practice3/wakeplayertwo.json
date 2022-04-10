@@ -1,8 +1,0 @@
-[
-  {
-    "Source": "player2",
-    "DetailType": "ping-pong-event",
-    "Detail": "{ \"round\": \"start\" }",
-    "EventBusName": "oriol-agost-event-bridge"
-  }
-]

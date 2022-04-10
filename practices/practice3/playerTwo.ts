@@ -22,7 +22,7 @@ function checkAndReturnNewRound(event: any): number {
         console.log("Starting game")
         return 1  // "Start" the game, last round will be 10
     }
-    console.log("Actual round is" + actualRound)
+    console.log("Actual round is " + actualRound)
     return manageStartedGame(actualRound);
 }
 
