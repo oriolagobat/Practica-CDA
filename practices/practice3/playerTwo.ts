@@ -7,7 +7,8 @@ const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
     checkSource(event, expectedSource)
 
     // Check if it's a valid shot and create a new event
-    if (checkShot("Two")) {
+    const playerNum = "Two"
+    if (checkShot(playerNum)) {
         const newSource = "player2";
         await createNewEvent(event, newSource);
     }
