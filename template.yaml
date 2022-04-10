@@ -182,35 +182,6 @@ Resources:
   ############################## PRACTICE 3 ##########################
   ####################################################################
 
-  ### Lambda's definition
-  ## Player One lambda definition
-  PlayerOneLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub '${AWS::StackName}-player-one-lambda'
-      Handler: playerOne.handler
-      CodeUri: dist/practice3
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - events:PutEvents
-
-
-  PlayerTwoLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub '${AWS::StackName}-player-two-lambda'
-      Handler: playerTwo.handler
-      CodeUri: dist/practice3
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - events:PutEvents
-
   ## Event bridge
   # Event bridge definition
   EventBridge:
@@ -225,7 +196,7 @@ Resources:
       EventBusName: !GetAtt EventBridge.Arn
       EventPattern:
         source:
-          - player2
+          - 'player2'
       Name: !Sub '${AWS::StackName}-events-from-player-one-rule'
       State: ENABLED
       Targets:
@@ -240,7 +211,7 @@ Resources:
       EventBusName: !GetAtt EventBridge.Arn
       EventPattern:
         source:
-          - player1
+          - 'player1'
       Name: !Sub '${AWS::StackName}-events-from-player-two-rule'
       State: ENABLED
       Targets:
@@ -266,4 +237,35 @@ Resources:
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn: !GetAtt EventBridgePlayerTwoRule.Arn
+
+
+  ### Lambda's definition
+  ## Player One lambda definition
+  PlayerOneLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-player-one-lambda'
+      Handler: playerOne.handler
+      CodeUri: dist/practice3
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Resource: '*'
+              Action:
+                - events:PutEvents
+
+  ## Player Two lambda definition
+  PlayerTwoLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-player-two-lambda'
+      Handler: playerTwo.handler
+      CodeUri: dist/practice3
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Resource: '*'
+              Action:
+                - events:PutEvents
+
 

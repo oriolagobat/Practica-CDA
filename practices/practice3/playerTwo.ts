@@ -6,7 +6,9 @@ const handler = async (event: EventBridgeEvent<any, any>, _context: any) => {
         console.log("Error, source was not the expected one")
     }
     let newRound: number = checkAndReturnNewRound(event)
-    await createNewEvent(newRound)
+    if (checkShot()) {
+        await createNewEvent(newRound);
+    }
 }
 
 function checkSource(event: any): Boolean {
@@ -34,7 +36,7 @@ function manageStartedGame(actualRound: number): number {
 
 function createNewEvent(newRound: number) {
     const eventBridge = new EventBridge();
-    const detail = {round: newRound.toString()}
+    const detail = {round: newRound}
     const params = {
         Entries: [
             {
@@ -45,7 +47,27 @@ function createNewEvent(newRound: number) {
             },
         ]
     };
-    eventBridge.putEvents(params).promise();
+    return eventBridge.putEvents(params).promise();
 }
+
+// If the number generated is bigger than seven, continue playing
+// Otherwise, stop the game
+function checkShot(): Boolean {
+    console.log("Checking shot")
+    let shot = getRandomInt()
+    if (shot > 7) {
+        console.log("Player two failed its shot... finishing game.");
+        throw new Error("Game has already finished");
+    }
+
+    return true
+}
+
+// Return a random integer between zero and ten
+function getRandomInt(): number {
+    const max = 10;
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
 
 export {handler}
